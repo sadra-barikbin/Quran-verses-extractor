@@ -2,6 +2,7 @@ import json
 import re
 
 from unittest import TestCase
+import unittest
 
 with open('quran_prep.json') as fp:
     verses = json.load(fp)
@@ -40,20 +41,20 @@ def encode_seq(seq_wo):
 
 
 def get_known_parts(seq_id):
+    if len(seq_id)<=1:
+        return
     part_start = 0
     last_part_end=-1
-    while part_start < len(seq_id):
+    while part_start < len(seq_id)-1:
         if seq_id[part_start] != UNK_C:
             running_intersection_of_ayehs=set()
             part_end = part_start
             while part_end < len(seq_id) and seq_id[part_end] != UNK_C:
                 running_intersection_of_ayehs=running_intersection_of_ayehs | set(index[str(seq_id[part_end])])
                 if not running_intersection_of_ayehs:
-                    part_end-=1
                     break
-                else:
-                    part_end += 1
-            if part_end!=last_part_end:
+                part_end += 1
+            if part_end-part_start >=2 and part_end!=last_part_end:
                 last_part_end=part_end
                 yield seq_id[part_start:part_end]
         part_start += 1
@@ -132,7 +133,6 @@ class VerseExtractionTest(TestCase):
         ('ایاک نعبد است زمستان دعای باغ در نوبهار گوید وایاک نستعین',
          [
              ['اياك نعبد', '1##5'],
-             ['باغ', '16##115,2##173,6##145'],
              ['واياك نستعين', '1##5']
          ])
 
@@ -141,3 +141,5 @@ class VerseExtractionTest(TestCase):
     def test_extraction(self):
         for text, res in self.test_data:
             self.assertListEqual(ayeh_extractor(text), res)
+if __name__=="__main__":
+    unittest.main()

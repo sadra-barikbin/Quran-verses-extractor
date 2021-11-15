@@ -40,15 +40,23 @@ def encode_seq(seq_wo):
 
 
 def get_known_parts(seq_id):
-    i = 0
-    while i < len(seq_id):
-        if seq_id[i] != UNK_C:
-            j = i
-            while j < len(seq_id) and seq_id[j] != UNK_C:
-                j += 1
-            yield seq_id[i:j]
-            i = j
-        i += 1
+    part_start = 0
+    last_part_end=-1
+    while part_start < len(seq_id):
+        if seq_id[part_start] != UNK_C:
+            running_intersection_of_ayehs=set()
+            part_end = part_start
+            while part_end < len(seq_id) and seq_id[part_end] != UNK_C:
+                running_intersection_of_ayehs=running_intersection_of_ayehs | set(index[str(seq_id[part_end])])
+                if not running_intersection_of_ayehs:
+                    part_end-=1
+                    break
+                else:
+                    part_end += 1
+            if part_end!=last_part_end:
+                last_part_end=part_end
+                yield seq_id[part_start:part_end]
+        part_start += 1
 
 
 def find_text_in(seq, verse_ids):

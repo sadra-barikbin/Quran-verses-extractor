@@ -130,10 +130,10 @@ class VerseExtractionTest(TestCase):
                                     '7##61',
                                     '7##67',
                                     '81##29'])]]),
-        ('ایاک نعبد است زمستان دعای باغ در نوبهار گوید وایاک نستعین',
+        ('ایاک نعبد است زمستان دعای باغ در نوبهار گوید ایاک نستعین',
          [
              ['اياك نعبد', '1##5'],
-             ['واياك نستعين', '1##5']
+             ['اياك نستعين', '1##5']
          ])
 
     ]
@@ -141,5 +141,7 @@ class VerseExtractionTest(TestCase):
     def test_extraction(self):
         for text, res in self.test_data:
             self.assertListEqual(ayeh_extractor(text), res)
+
+
 if __name__=="__main__":
     unittest.main()

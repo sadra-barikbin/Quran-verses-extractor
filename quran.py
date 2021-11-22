@@ -95,8 +95,8 @@ def ayeh_extractor(input_sentence):
 
 class VerseExtractionTest(TestCase):
     test_data = [
-        ('رب العالمین همه چیزی خیلی خوب پیش رفت.',
-         [['رب العالمين', ','.join(['1##2',
+        (,
+         [f'{pos} ' for pos in ['1##2',
                                     '10##10',
                                     '10##37',
                                     '26##109',

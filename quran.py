@@ -2,9 +2,6 @@ import json
 import re
 import csv
 
-from unittest import TestCase
-import unittest
-
 with open('quran_prep.json') as fp:
     verses = json.load(fp)
 
@@ -90,7 +87,7 @@ def find_text_in(seq, verse_ids):
                     selected_verses.append(verse_id)
                 i += j
             i += 1
-    return [text, ','.join(sorted(selected_verses))]
+    return [f"{verse_id} {text}" for verse_id in sorted(selected_verses)]
 
 
 def ayeh_extractor(input_sentence):
@@ -101,66 +98,7 @@ def ayeh_extractor(input_sentence):
     for part in get_known_parts(seq_id):
         indices = [set(index[str(wid)]) for wid in part]
         intersect = set.intersection(*indices)
-        res = find_text_in(part, intersect)
-        if res[1]:
-            results.append(res)
+        results += find_text_in(part, intersect)
 
-    return results
+    return sorted(results)
 
-
-class VerseExtractionTest(TestCase):
-    test_data = [
-        (,
-         [f'{pos} ' for pos in ['1##2',
-                                    '10##10',
-                                    '10##37',
-                                    '26##109',
-                                    '26##127',
-                                    '26##145',
-                                    '26##16',
-                                    '26##164',
-                                    '26##180',
-                                    '26##192',
-                                    '26##23',
-                                    '26##77',
-                                    '27##44',
-                                    '27##8',
-                                    '28##30',
-                                    '32##2',
-                                    '37##182',
-                                    '39##75',
-                                    '40##64',
-                                    '40##65',
-                                    '41##9',
-                                    '43##46',
-                                    '45##36',
-                                    '5##28',
-                                    '56##80',
-                                    '59##16',
-                                    '6##162',
-                                    '6##45',
-                                    '69##43',
-                                    '7##104',
-                                    '7##54',
-                                    '7##61',
-                                    '7##67',
-                                    '81##29'])]]),
-        ('ایاک نعبد است زمستان دعای باغ در نوبهار گوید ایاک نستعین',
-         [
-             ['اياك نعبد', '1##5'],
-             ['اياك نستعين', '1##5']
-         ]),
-        ('والعصر',
-         [
-             ['و العصر', '103##1']
-         ])
-
-    ]
-
-    def test_extraction(self):
-        for text, res in self.test_data:
-            self.assertListEqual(ayeh_extractor(text), res)
-
-
-if __name__ == "__main__":
-    unittest.main()

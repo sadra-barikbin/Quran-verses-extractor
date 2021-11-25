@@ -16,9 +16,6 @@ class VerseExtractionTest(TestCase):
                 test_out = []
             with self.subTest(test=f"Test#{i}"):
                 func_out = ayeh_extractor(text_in)
-                print('A:', func_out)
-                print('B:', test_out)
-
                 self.assertListEqual(func_out, test_out)
 
 

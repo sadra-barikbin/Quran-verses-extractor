@@ -87,7 +87,7 @@ def find_text_in(seq, verse_ids):
                     selected_verses.append(verse_id)
                 i += j
             i += 1
-    return [f"{verse_id} {text}" for verse_id in sorted(selected_verses)]
+    return [f"{text} {verse_id}" for verse_id in sorted(selected_verses)]
 
 
 def ayeh_extractor(input_sentence):

@@ -23,6 +23,7 @@ class VerseExtractionTest(TestCase):
         test_in= (Path('tests')/'in'/'input1.txt').read_text(encoding='utf-8')
         test_out = (Path('tests') / 'out' / 'output1.txt').read_text(encoding="utf-8").strip().split('\n')
         func_out = ayeh_extractor(test_in)
+        print([item.split()[-1] for item in func_out])
         self.assertListEqual(func_out,test_out)
 
 

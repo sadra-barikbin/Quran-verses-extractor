@@ -52,26 +52,6 @@ def encode_seq(seq_wo):
     return [words_map[w] if w in words_map else words_map['[UNK]'] for w in seq_wo]
 
 
-def get_known_parts(seq_id):
-    if len(seq_id) <= 1:
-        return
-    part_start = 0
-    last_part_end = -1
-    while part_start < len(seq_id) - 1:
-        if seq_id[part_start] != UNK_C:
-            running_intersection_of_ayehs = set()
-            part_end = part_start
-            while part_end < len(seq_id) and seq_id[part_end] != UNK_C:
-                running_intersection_of_ayehs = running_intersection_of_ayehs | set(index[str(seq_id[part_end])])
-                if not running_intersection_of_ayehs:
-                    break
-                part_end += 1
-            if part_end - part_start >= 2 and part_end != last_part_end:
-                last_part_end = part_end
-                yield seq_id[part_start:part_end]
-        part_start += 1
-
-
 def find_text_in(seq, verse_ids):
     text = ' '.join([words[s] for s in seq])
     selected_verses = []
@@ -90,15 +70,39 @@ def find_text_in(seq, verse_ids):
     return [f"{text} {verse_id}" for verse_id in sorted(selected_verses)]
 
 
+def get_known_parts(seq_id):
+    print(seq_id)
+    if len(seq_id) <= 1:
+        return
+    part_start = 0
+    last_part_end = -1
+    while part_start < len(seq_id) - 1:
+        ayehs=[]
+        running_intersection_of_ayehs = set()
+        part_end = part_start
+        if seq_id[part_start] != UNK_C:
+            #TODO: optimization part_end=last_part_end
+            while part_end < len(seq_id) and seq_id[part_end] != UNK_C:
+                running_intersection_of_ayehs = running_intersection_of_ayehs | set(index[str(seq_id[part_end])])
+                print(part_start,part_end)
+                candidate_ayehs = find_text_in(seq_id[part_start:part_end+1],running_intersection_of_ayehs)
+                if not candidate_ayehs:
+                    break
+                ayehs=candidate_ayehs
+                part_end += 1
+            if part_end - part_start >= 2 and part_end != last_part_end:
+                last_part_end = part_end
+                yield ayehs
+        part_start += 1
+
+
 def ayeh_extractor(input_sentence):
     text = normalize_text(input_sentence)
     seq_id = encode_text(text)
 
     results = []
-    for part in get_known_parts(seq_id):
-        indices = [set(index[str(wid)]) for wid in part]
-        intersect = set.intersection(*indices)
-        results += find_text_in(part, intersect)
+    for parts in get_known_parts(seq_id):
+        results += parts
 
     return sorted(results)
 

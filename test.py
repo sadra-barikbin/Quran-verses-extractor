@@ -20,11 +20,13 @@ class VerseExtractionTest(TestCase):
     
     #python3 test.py VerseExtractionTest.test_coverage
     def test_coverage(self):
-        test_in= (Path('tests')/'in'/'input1.txt').read_text(encoding='utf-8')
-        test_out = (Path('tests') / 'out' / 'output1.txt').read_text(encoding="utf-8").strip().split('\n')
+        test_in= (Path('tests')/'in'/'input22.txt').read_text(encoding='utf-8')
+        test_out = (Path('tests') / 'out' / 'output22.txt').read_text(encoding="utf-8").strip().split('\n')
+        if test_out == ['']:
+                test_out = []
         func_out = ayeh_extractor(test_in)
-        print([item.split()[-1] for item in func_out])
-        self.assertListEqual(func_out,test_out)
+        print(func_out)
+        self.assertSetEqual(set(func_out),set(test_out))
 
 
 if __name__ == "__main__":

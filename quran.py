@@ -33,7 +33,6 @@ vavs_keys = set(vavs.keys())
 def normalize_text(text):
     text = re.sub(r'[' + analysis_data['pun'] + ']', '', text)
     text = re.sub(r'[\s]+', ' ', text)
-    text = re.sub(r'[و]\s', 'و', text)
     for key, val in analysis_data['repl'].items():
         text = re.sub(r'[' + key + ']', val, text)
     for vav in vavs:

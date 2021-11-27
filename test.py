@@ -20,8 +20,8 @@ class VerseExtractionTest(TestCase):
     
     #python3 test.py VerseExtractionTest.test_coverage
     def test_coverage(self):
-        test_in= (Path('tests')/'in'/'input20.txt').read_text(encoding='utf-8')
-        test_out = (Path('tests') / 'out' / 'output20.txt').read_text(encoding="utf-8").strip().split('\n')
+        test_in= (Path('tests')/'in'/'input9.txt').read_text(encoding='utf-8')
+        test_out = (Path('tests') / 'out' / 'output9.txt').read_text(encoding="utf-8").strip().split('\n')
         if test_out == ['']:
                 test_out = []
         func_out = ayeh_extractor(test_in)

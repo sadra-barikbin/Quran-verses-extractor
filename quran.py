@@ -63,15 +63,20 @@ def find_text_in(seq, verse_ids):
         i = 0
         while i < len(verse_seq):
             if verse_seq[i] == seq[0]:
+                verse=''
                 j = 0
                 while j < len(seq) and (i+j) < len(verse_seq) and verse_seq[i + j] == seq[j]:
+                    verse+=verses_with_diacritics[verse_id][i+j]
+                    if verses[verse_id][i+j]!='و':
+                        verse+=' '
                     j += 1
+                if verse[-1]==' ':
+                    verse=verse[:-1]
                 if j == len(seq):
-                    selected_verses.append((verse_id,i,j))
+                    selected_verses.append(f"{verse} {verse_id}")
                 i += j
             i += 1
-    return [f"{' '.join(verses_with_diacritics[verse_id][start:start+length])} {verse_id}" for \
-        verse_id,start,length in selected_verses]
+    return selected_verses
 
 
 def get_known_parts(seq_id):
@@ -102,7 +107,6 @@ def get_known_parts(seq_id):
 def ayeh_extractor(input_sentence):
     text = normalize_text(input_sentence)
     seq_id = encode_text(text)
-
     results = []
     for parts in get_known_parts(seq_id):
         results += parts

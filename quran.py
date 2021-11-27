@@ -1,6 +1,7 @@
 import json
 import re
 import csv
+from itertools import chain
 
 with open('quran_prep.json') as fp:
     verses = json.load(fp)
@@ -70,20 +71,17 @@ def find_text_in(seq, verse_ids):
 
 
 def get_known_parts(seq_id):
-    print(seq_id)
     if len(seq_id) <= 1:
         return
     part_start = 0
-    last_part_end = -1
+    last_part_end = 0
     while part_start < len(seq_id) - 1:
         ayehs=[]
-        running_intersection_of_ayehs = set()
-        part_end = part_start
+        part_end = last_part_end
+        running_intersection_of_ayehs = set(chain(*[index[str(x)] for x in seq_id[part_start:part_end+1]]))
         if seq_id[part_start] != UNK_C:
-            #TODO: optimization part_end=last_part_end
             while part_end < len(seq_id) and seq_id[part_end] != UNK_C:
                 running_intersection_of_ayehs = running_intersection_of_ayehs | set(index[str(seq_id[part_end])])
-                print(part_start,part_end)
                 candidate_ayehs = find_text_in(seq_id[part_start:part_end+1],running_intersection_of_ayehs)
                 if not candidate_ayehs:
                     break

@@ -42,7 +42,7 @@ def normalize_text(text):
         text = re.sub(r'[' + key + ']', val, text)
     for vav in vavs:
         if vavs[vav] == 2:
-            text = re.sub(vav, vav[0] + ' ' + vav[1:], text)
+            text = re.sub(r'\b'+vav, vav[0] + ' ' + vav[1:], text)
     return text
 
 
